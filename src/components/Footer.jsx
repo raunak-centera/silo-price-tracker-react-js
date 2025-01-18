@@ -1,6 +1,5 @@
 import { Container, Row, Col } from "react-bootstrap";
-
-import Logo from "../assets/img/logotipo.svg";
+import Logo from "../assets/img/logo.png";
 
 export default function Footer() {
   return (
@@ -15,14 +14,10 @@ export default function Footer() {
           </Col>
 
           <Col>
-            <img
-              src="https://silocloud.io/static/media/silocloud_white.a7b0d64fec5d4a158383.png"
-              alt="logotipo da Beautiful Home Store"
-              width={150}
-            />
+            <img src={Logo} alt="Price tracker" width={150} />
           </Col>
         </Row>
-        <p className="py-4">© 2024 SILOCLOUD |All Rights Reserved </p>
+        <p className="py-4">© 2025 SILOCLOUD |All Rights Reserved </p>
       </Container>
     </div>
   );
