@@ -1,10 +1,12 @@
+import LandingPage from "./Pages/LandingPage/LandingPage";
 import Principal from "./Principal";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (
     <div className="App">
-      <Principal />
+      <LandingPage />
+      {/* <Principal /> */}
     </div>
   );
 }
