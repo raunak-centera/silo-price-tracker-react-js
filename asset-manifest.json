@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.94488e83.css",
-    "main.js": "/static/js/main.30922972.js",
+    "main.js": "/static/js/main.447ed78d.js",
     "static/media/black-friday.svg": "/static/media/black-friday.3c79fe33cce376a6193059cf3f69b032.svg",
     "static/media/kitchen1.png": "/static/media/kitchen1.e326f105c28c624e5abd.png",
     "static/media/kitchen3.png": "/static/media/kitchen3.cef016d686df66bb6ff4.png",
@@ -21,10 +21,10 @@
     "static/media/desk.svg": "/static/media/desk.8366d68720c9758d8e272a5c1c617f36.svg",
     "index.html": "/index.html",
     "main.94488e83.css.map": "/static/css/main.94488e83.css.map",
-    "main.30922972.js.map": "/static/js/main.30922972.js.map"
+    "main.447ed78d.js.map": "/static/js/main.447ed78d.js.map"
   },
   "entrypoints": [
     "static/css/main.94488e83.css",
-    "static/js/main.30922972.js"
+    "static/js/main.447ed78d.js"
   ]
 }
