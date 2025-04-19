@@ -19,38 +19,59 @@ const SearchBar = () => {
     const price = Number(basePrice.toString().replace(/,/g, ""));
     const amazonPrice = price * (1 + (Math.random() * 0.05 - 0.025));
     const flipkartPrice = price * (1 + (Math.random() * 0.04 - 0.02));
+    const predictedPrice = price * (1 + (Math.random() * 0.07 - 0.02));
     return {
       amazonPrice: Math.round(amazonPrice),
       flipkartPrice: Math.round(flipkartPrice),
+      predictedPrice: Math.round(predictedPrice),
     };
   };
 
   const fetchProducts = async (searchTerm) => {
     try {
       setLoading(true);
+
+      const postBody = {
+        category_id: "",
+        sub_category_id: "",
+        store_id: "",
+        search: searchTerm || "a",
+        sort: "",
+        limit: 10,
+        offset: "0",
+        min_price: "",
+        max_price: "",
+      };
+
       const response = await fetch(
-        `https://api.silocloud.io/api/v1/public/search-products?name=${
-          searchTerm || "a"
-        }`
+        "https://api.silocloud.io/api/v1/marketplace/store-filters",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postBody),
+        }
       );
 
       if (!response.ok) throw new Error("Product not available");
 
       const data = await response.json();
 
-      if (data.success && data.data?.products) {
-        const updatedProducts = data.data.products.map((p) => {
-          const { amazonPrice, flipkartPrice } = generateDummyPrices(p.price);
-          return {
-            ...p,
-            amazonPrice,
-            flipkartPrice,
-          };
-        });
-        setProducts(updatedProducts);
-      } else {
-        setProducts([]);
-      }
+      const fetchedProducts = data?.data?.product_data || [];
+
+      const updatedProducts = fetchedProducts.map((p) => {
+        const { amazonPrice, flipkartPrice, predictedPrice } =
+          generateDummyPrices(p.price);
+        return {
+          ...p,
+          amazonPrice,
+          flipkartPrice,
+          predictedPrice,
+        };
+      });
+
+      setProducts(updatedProducts);
     } catch (err) {
       console.error("API error:", err);
       swal("", "Product not available", "error");
@@ -65,10 +86,9 @@ const SearchBar = () => {
     fetchProducts(query);
   };
 
-  // Debounce-based auto-fetch on typing
   useEffect(() => {
     if (isButtonTriggeredRef.current) {
-      isButtonTriggeredRef.current = false; // skip debounce this time
+      isButtonTriggeredRef.current = false;
       return;
     }
 
@@ -117,15 +137,19 @@ const SearchBar = () => {
           {query && <h5 className="text-center mb-3">Results for “{query}”</h5>}
           <div className="row">
             {products.map((product) => {
-              const slug = slugify(product.name);
+              const slug = slugify(product.product_name);
+              const siloLink = `https://store.silocloud.io/50/${encodeURIComponent(
+                product.product_name
+              )}`;
+
               return (
                 <div className="col-md-4 mb-4" key={product.id}>
                   <div className="card shadow-sm h-100">
                     <div style={{ height: "200px", overflow: "hidden" }}>
                       <img
-                        src={product.image}
+                        src={product.thumbnail}
                         className="card-img-top"
-                        alt={product.name}
+                        alt={product.product_name}
                         style={{
                           objectFit: "cover",
                           height: "100%",
@@ -134,16 +158,23 @@ const SearchBar = () => {
                       />
                     </div>
                     <div className="card-body d-flex flex-column">
-                      <h5 className="card-title">{product.name}</h5>
-                      <p className="text-muted small">{product.description}</p>
+                      <h5 className="card-title">{product.product_name}</h5>
+
                       <p className="fw-bold">
-                        Silo Price: ₹
-                        {Number(
-                          product.price.toString().replace(/,/g, "")
-                        ).toLocaleString()}
+                        Silo Price: $
+                        {Number(product.price).toFixed(2).toLocaleString()}
+                        <a
+                          href={siloLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-sm btn-primary ms-3"
+                        >
+                          View Product
+                        </a>
                       </p>
+
                       <p>
-                        Amazon Price: ₹{product.amazonPrice.toLocaleString()}{" "}
+                        Amazon Price: ${product.amazonPrice.toLocaleString()}{" "}
                         <a
                           href={`https://www.amazon.in/s?k=${slug}`}
                           target="_blank"
@@ -154,7 +185,7 @@ const SearchBar = () => {
                         </a>
                       </p>
                       <p>
-                        Flipkart Price: ₹
+                        Flipkart Price: $
                         {product.flipkartPrice.toLocaleString()}{" "}
                         <a
                           href={`https://www.flipkart.com/search?q=${slug}`}
@@ -164,6 +195,11 @@ const SearchBar = () => {
                         >
                           View
                         </a>
+                      </p>
+                      <hr />
+                      <p className="text-muted mb-0">
+                        <strong>Next Week Predicted Price:</strong> $
+                        {product.predictedPrice.toLocaleString()}
                       </p>
                     </div>
                   </div>
