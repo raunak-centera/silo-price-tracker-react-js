@@ -138,9 +138,9 @@ const SearchBar = () => {
           <div className="row">
             {products.map((product) => {
               const slug = slugify(product.product_name);
-              const siloLink = `https://store.silocloud.io/50/${encodeURIComponent(
-                product.product_name
-              )}`;
+              const siloLink = `https://store.silocloud.io/${
+                product.id
+              }/${encodeURIComponent(product.product_name)}`;
 
               return (
                 <div className="col-md-4 mb-4" key={product.id}>
